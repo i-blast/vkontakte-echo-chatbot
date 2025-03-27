@@ -25,9 +25,6 @@ dependencies {
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-	implementation("com.vk.api:sdk:1.0.16")
-	implementation("org.slf4j:slf4j-api:2.0.17")
-
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
