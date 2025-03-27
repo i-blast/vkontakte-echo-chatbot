@@ -9,3 +9,4 @@ vk:
   access-token: ${VK_ACCESS_TOKEN}
   group-id: ${VK_GROUP_ID}
   confirmation-code: ${VK_CONFIRMATION_CODE}
+  api-version: 5.199
