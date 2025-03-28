@@ -16,8 +16,6 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
-import java.net.URLDecoder
-import java.net.URLEncoder
 import kotlin.random.Random
 
 @Service
@@ -30,6 +28,7 @@ class VkEchoService(
     private val apiVersion: String,
 
     private val restTemplate: RestTemplate,
+    private val messageStatsService: WordStatsService,
 ) {
 
     private val logger: Logger = LoggerFactory.getLogger(VkEchoService::class.java)
@@ -41,7 +40,9 @@ class VkEchoService(
         return when (event) {
             is Confirmation -> ResponseEntity.ok(confirmationCode)
             is MessageNew -> {
-                echoMessage(event.eventObject.message)
+                val message = event.eventObject.message
+                messageStatsService.addMessage(message.text)
+                echoMessage(message)
                 ResponseEntity.ok("ok")
             }
 
