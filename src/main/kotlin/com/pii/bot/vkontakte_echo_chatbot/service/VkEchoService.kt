@@ -57,7 +57,7 @@ class VkEchoService(
         val sendMessageUrl = VkApiMethod.MESSAGES_SEND.buildUrl(
             mapOf(
                 "peer_id" to message.peerId.toString(),
-                "message" to message.text,
+                "message" to "Вы сказали: " + message.text,
                 "random_id" to Random.nextInt().toString(),
                 "access_token" to accessToken,
                 "v" to apiVersion
