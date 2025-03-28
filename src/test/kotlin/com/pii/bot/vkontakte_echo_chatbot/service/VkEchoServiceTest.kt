@@ -9,8 +9,9 @@ import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.MessageReply
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.MessageReplyObject
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.VkEventType
 import com.pii.bot.vkontakte_echo_chatbot.util.TestDataFactory.createMessageNew
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.slot
+import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -44,20 +45,20 @@ class VkEchoServiceTest {
     }
 
     @Test
-    fun `should return confirmation code on Confirmation event`() {
+    fun `should return confirmation code on Confirmation event`() = runTest {
         val result = vkEchoService.processEvent(Confirmation())
         assertEquals(ResponseEntity.ok("test_confirmation_code"), result)
     }
 
     @Test
-    fun `should throw VkApiException when VK API returns an error`() {
+    fun `should throw VkApiException when VK API returns an error`() = runTest {
         val event = createMessageNew()
         val errorResponse = VkApiResponse(
             null,
             VkApiError(100, "Один из необходимых параметров был не передан или неверен.")
         )
 
-        every {
+        coEvery {
             restTemplate.exchange(
                 any<String>(),
                 any(),
@@ -70,10 +71,10 @@ class VkEchoServiceTest {
     }
 
     @Test
-    fun `should return ok on MessageNew event`() {
+    fun `should return ok on MessageNew event`() = runTest {
         val event = createMessageNew()
 
-        every {
+        coEvery {
             restTemplate.exchange(
                 any<String>(),
                 any(),
@@ -87,7 +88,7 @@ class VkEchoServiceTest {
     }
 
     @Test
-    fun `should return ok on MessageReply event`() {
+    fun `should return ok on MessageReply event`() = runTest {
         val event = MessageReply(
             type = VkEventType.MESSAGE_REPLY,
             eventId = "eventId",
@@ -100,11 +101,11 @@ class VkEchoServiceTest {
     }
 
     @Test
-    fun `should correctly construct URL when sending message`() {
+    fun `should correctly construct URL when sending message`() = runTest {
         val event = createMessageNew()
         val urlSlot = slot<String>()
 
-        every {
+        coEvery {
             restTemplate.exchange(
                 capture(urlSlot),
                 any<HttpMethod>(),

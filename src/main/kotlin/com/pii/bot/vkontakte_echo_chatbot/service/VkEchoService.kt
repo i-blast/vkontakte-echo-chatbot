@@ -8,6 +8,8 @@ import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.Message
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.MessageNew
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.MessageReply
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.VkEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -33,7 +35,7 @@ class VkEchoService(
 
     private val logger: Logger = LoggerFactory.getLogger(VkEchoService::class.java)
 
-    fun processEvent(event: VkEvent): ResponseEntity<String> {
+    suspend fun processEvent(event: VkEvent): ResponseEntity<String> {
 
         logger.debug(">>>>> New event: {}", event.type.toString())
 
@@ -53,7 +55,7 @@ class VkEchoService(
         }
     }
 
-    private fun echoMessage(message: Message) {
+    private suspend fun echoMessage(message: Message) {
 
         val sendMessageUrl = VkApiMethod.MESSAGES_SEND.buildUrl(
             mapOf(
@@ -65,15 +67,16 @@ class VkEchoService(
             )
         )
 
-        val responseEntity = restTemplate.exchange(
-            sendMessageUrl,
-            HttpMethod.POST,
-            HttpEntity.EMPTY,
-            VkApiResponse::class.java
-        )
-        val response = responseEntity.body
+        val response = withContext(Dispatchers.IO) {
+            restTemplate.exchange(
+                sendMessageUrl,
+                HttpMethod.POST,
+                HttpEntity.EMPTY,
+                VkApiResponse::class.java
+            )
+        }
 
-        response?.error?.let {
+        response?.body?.error?.let {
             logger.error(">>>>> VK API error: ${it.code} - ${it.message}")
             throw VkApiException(it.code, it.message)
         }

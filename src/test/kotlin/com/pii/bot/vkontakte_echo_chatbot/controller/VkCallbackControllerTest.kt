@@ -8,7 +8,8 @@ import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.Confirmation
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.VkEvent
 import com.pii.bot.vkontakte_echo_chatbot.service.VkEchoService
 import com.pii.bot.vkontakte_echo_chatbot.util.TestDataFactory.createMessageNew
-import io.mockk.every
+import io.mockk.coEvery
+import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.containsString
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,23 +31,24 @@ class VkCallbackControllerTest {
     private lateinit var vkEchoService: VkEchoService
 
     @Test
-    fun `should return confirmation code`() {
+    fun `should return confirmation code`() = runTest {
         val event = Confirmation()
-        every { vkEchoService.processEvent(event) } returns ResponseEntity.ok("test_code")
+        coEvery { vkEchoService.processEvent(event) } returns ResponseEntity.ok("test_code")
 
         mockMvc.perform(
             post("/vk/echo")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(event.toJson())
-        )
-            .andExpect(status().isOk)
-            .andExpect(content().string("test_code"))
+        ).andExpect {
+            status().isOk
+            content().string("test_code")
+        }
     }
 
     @Test
-    fun `should handle VkApiException`() {
+    fun `should handle VkApiException`() = runTest {
         val event = createMessageNew()
-        every { vkEchoService.processEvent(any()) } throws VkApiException(
+        coEvery { vkEchoService.processEvent(any()) } throws VkApiException(
             100,
             "Один из необходимых параметров был не передан или неверен."
         )
@@ -55,22 +57,24 @@ class VkCallbackControllerTest {
             post("/vk/echo")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(event.toJson())
-        )
-            .andExpect(status().isBadRequest)
-            .andExpect(content().string(containsString("Один из необходимых параметров был не передан или неверен.")))
+        ).andExpect {
+            status().isBadRequest
+            content().string(containsString("Один из необходимых параметров был не передан или неверен."))
+        }
     }
 
     @Test
-    fun `should handle unexpected exceptions`() {
-        every { vkEchoService.processEvent(any()) } throws RuntimeException("Unexpected error")
+    fun `should handle unexpected exceptions`() = runTest {
+        coEvery { vkEchoService.processEvent(any()) } throws RuntimeException("Unexpected error")
 
         mockMvc.perform(
             post("/vk/echo")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(createMessageNew().toJson())
-        )
-            .andExpect(status().isInternalServerError)
-            .andExpect(content().string("Unexpected error."))
+        ).andExpect {
+            status().isInternalServerError
+            content().string("Unexpected error.")
+        }
     }
 
     fun VkEvent.toJson(): String =

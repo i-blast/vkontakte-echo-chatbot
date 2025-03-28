@@ -16,7 +16,7 @@ class VkCallbackController(
 ) {
 
     @PostMapping
-    fun handle(
+    suspend fun handle(
         @RequestBody event: VkEvent
     ): ResponseEntity<String> {
         return vkEchoService.processEvent(event)

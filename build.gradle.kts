@@ -23,6 +23,10 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.10.1")
+
+	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.mockk:mockk:1.13.17")
 	testImplementation("com.ninja-squad:springmockk:4.0.2")
