@@ -118,7 +118,7 @@ class VkEchoServiceTest {
         val url = urlSlot.captured
         assertThat(url).contains(
             "peer_id=12345",
-            "message=hi",
+            "message=Вы сказали: hi тест",
             "access_token=test_access_token",
             "v=5.199"
         )
