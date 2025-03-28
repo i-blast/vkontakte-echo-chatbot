@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import kotlin.random.Random
@@ -31,20 +32,20 @@ class VkEchoService(
 
     private val logger: Logger = LoggerFactory.getLogger(VkEchoService::class.java)
 
-    fun processEvent(event: VkEvent): String {
+    fun processEvent(event: VkEvent): ResponseEntity<String> {
 
         logger.debug(">>>>> New event: {}", event.type.toString())
 
         return when (event) {
-            is Confirmation -> confirmationCode
+            is Confirmation -> ResponseEntity.ok(confirmationCode)
             is MessageNew -> {
                 echoMessage(event.eventObject.message)
-                "ok"
+                ResponseEntity.ok("ok")
             }
 
             is MessageReply -> {
                 logger.debug(">>>>> message reply <<<<<")
-                "ok"
+                ResponseEntity.ok("ok")
             }
         }
     }
