@@ -22,8 +22,8 @@ enum class VkApiMethod(
 
     fun buildUrl(queryParams: Map<String, String>): String {
         val queryString = queryParams.entries.joinToString("&") {
-            "${it.key}=${URLEncoder.encode(it.value, StandardCharsets.UTF_8)}"
+            "${it.key}=${it.value}"
         }
-        return URI("$BASE_URL$endpoint?$queryString").toString()
+        return "$BASE_URL$endpoint?$queryString"
     }
 }

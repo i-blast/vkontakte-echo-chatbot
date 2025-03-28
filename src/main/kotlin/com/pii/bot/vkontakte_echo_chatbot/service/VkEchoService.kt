@@ -16,6 +16,8 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
+import java.net.URLDecoder
+import java.net.URLEncoder
 import kotlin.random.Random
 
 @Service
