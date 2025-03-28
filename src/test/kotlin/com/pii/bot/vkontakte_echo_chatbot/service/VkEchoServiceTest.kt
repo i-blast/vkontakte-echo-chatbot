@@ -1,5 +1,6 @@
 package com.pii.bot.vkontakte_echo_chatbot.service
 
+import com.ninjasquad.springmockk.MockkBean
 import com.pii.bot.vkontakte_echo_chatbot.exception.VkApiException
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.VkApiError
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.VkApiResponse
@@ -8,29 +9,24 @@ import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.MessageReply
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.MessageReplyObject
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.VkEventType
 import com.pii.bot.vkontakte_echo_chatbot.util.TestDataFactory.createMessageNew
+import io.mockk.every
+import io.mockk.slot
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.ArgumentMatchers.eq
-import org.mockito.Mockito.doReturn
-import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.web.client.RestTemplate
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 @SpringBootTest
 class VkEchoServiceTest {
 
-    @MockitoBean
+    @MockkBean
     private lateinit var restTemplate: RestTemplate
 
     @Autowired
@@ -61,8 +57,14 @@ class VkEchoServiceTest {
             VkApiError(100, "Один из необходимых параметров был не передан или неверен.")
         )
 
-        doReturn(ResponseEntity.ok(errorResponse)).`when`(restTemplate)
-            .exchange(anyString(), eq(HttpMethod.POST), any(), eq(VkApiResponse::class.java))
+        every {
+            restTemplate.exchange(
+                any<String>(),
+                any(),
+                any(),
+                VkApiResponse::class.java
+            )
+        } returns ResponseEntity.ok(errorResponse)
 
         assertThrows<VkApiException> { vkEchoService.processEvent(event) }
     }
@@ -71,8 +73,14 @@ class VkEchoServiceTest {
     fun `should return ok on MessageNew event`() {
         val event = createMessageNew()
 
-        doReturn(ResponseEntity.ok(VkApiResponse(null, null))).`when`(restTemplate)
-            .exchange(anyString(), eq(HttpMethod.POST), any(), eq(VkApiResponse::class.java))
+        every {
+            restTemplate.exchange(
+                any<String>(),
+                any(),
+                any(),
+                VkApiResponse::class.java
+            )
+        } returns ResponseEntity.ok(VkApiResponse(null, null))
 
         val result = vkEchoService.processEvent(event)
         assertEquals(ResponseEntity.ok("ok"), result)
@@ -94,19 +102,20 @@ class VkEchoServiceTest {
     @Test
     fun `should correctly construct URL when sending message`() {
         val event = createMessageNew()
-        val urlCaptor = argumentCaptor<String>()
-        whenever(
+        val urlSlot = slot<String>()
+
+        every {
             restTemplate.exchange(
-                urlCaptor.capture(),
-                eq(HttpMethod.POST),
+                capture(urlSlot),
+                any<HttpMethod>(),
                 any(),
-                eq(VkApiResponse::class.java)
+                VkApiResponse::class.java
             )
-        ).thenReturn(ResponseEntity.ok(VkApiResponse(null, null)))
+        } returns ResponseEntity.ok(VkApiResponse(null, null))
 
         vkEchoService.processEvent(event)
 
-        val url = urlCaptor.firstValue
+        val url = urlSlot.captured
         assertThat(url).contains(
             "peer_id=12345",
             "message=hi",
