@@ -6,7 +6,7 @@
 
 - **VK API (Callback API)**
 - **Kotlin (JDK 21), Kotlin Coroutines, Spring Boot 3.4.x, Spring WebFlux**
-- **Spring Test, MockK, Springmockk, MockWebServer, JUnit 5, AssertJ,  ()**
+- **Spring Test, MockK, Springmockk, MockWebServer, JUnit 5, AssertJ**
 - **ngrok** – HTTPS-туннель 
 
 ## Запуск
