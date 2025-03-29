@@ -19,6 +19,6 @@ class VkCallbackController(
     suspend fun handle(
         @RequestBody event: VkEvent
     ): ResponseEntity<String> {
-        return vkEchoService.processEvent(event)
+        return ResponseEntity.ok(vkEchoService.processEvent(event))
     }
 }

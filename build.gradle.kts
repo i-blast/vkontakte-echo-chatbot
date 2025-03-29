@@ -19,20 +19,31 @@ repositories {
 }
 
 dependencies {
+	// Spring
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	// Kotlin
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-
+	// Kotlin Coroutines
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.10.1")
+	// Kotlin Reactor
+//	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.2.3")
 
+	// Tests
+	testImplementation("org.springframework.boot:spring-boot-starter-test") {
+		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+		exclude(group = "org.mockito")
+	}
 	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("io.mockk:mockk:1.13.17")
 	testImplementation("com.ninja-squad:springmockk:4.0.2")
-	testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+	testImplementation("com.squareup.okhttp3:mockwebserver:5.0.0-alpha.14")
+	testImplementation(kotlin("test"))
+
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation(kotlin("test"))
 }
 
 kotlin {

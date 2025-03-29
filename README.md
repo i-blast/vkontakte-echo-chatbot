@@ -5,8 +5,8 @@
 ## Стек
 
 - **VK API (Callback API)**
-- **Kotlin (JDK 21), Kotlin Coroutines, Spring Boot 3.4.x, Spring Web**
-- **Spring Test, MockK & Springmockk (вместо Mockito), JUnit 5, AssertJ**
+- **Kotlin (JDK 21), Kotlin Coroutines, Spring Boot 3.4.x, Spring WebFlux**
+- **Spring Test, MockK, Springmockk, MockWebServer, JUnit 5, AssertJ,  ()**
 - **ngrok** – HTTPS-туннель 
 
 ## Запуск
@@ -32,10 +32,9 @@
 ## Дополнительно
 
 - Сервис подсчёта статистики сообщений (in-memory)
-- Переведены вызовы VK API на корутины для неблокирующей обработки запросов. Контроллеры теперь поддерживают suspend-функции
+- Асинхронный (non-blocking I/O) стек: Spring WebFlux (Project Reactor) + Kotlin Coroutines
 
 ## TODO
 
-- Реальное хранилище для реализации статистики сообщений? PostgreSQL, Elasticsearch или MongoDB?
-- Неблокирующая асинхронная WebFlux-реализация на корутинах Kotlin и R2DBC-драйвером PostgreSQL (или другой реализацией хранилища) 
+- Реальное хранилище для реализации статистики сообщений. PostgreSQL R2DBC, Elasticsearch,.. (отдельная ветка non-blocking-storage)
 - 

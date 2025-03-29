@@ -1,9 +1,13 @@
 package com.pii.bot.vkontakte_echo_chatbot.util
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.ClientInfo
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.Message
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.MessageNew
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.MessageNewEventObject
+import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.MessageReply
+import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.MessageReplyObject
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.VkEventType
 
 object TestDataFactory {
@@ -48,4 +52,23 @@ object TestDataFactory {
             message = message
         )
     )
+
+    fun createMessageReply(
+        text: String = "Reply message",
+        peerId: Int = 12345,
+        eventId: String = "reply_event_id",
+        groupId: Int = 1
+    ): MessageReply = MessageReply(
+        type = VkEventType.MESSAGE_REPLY,
+        groupId = groupId,
+        eventId = eventId,
+        version = "5.199",
+        eventObject = MessageReplyObject(
+            message = createTestMessage(text = text, peerId = peerId)
+        )
+    )
+
+    val objectMapper: ObjectMapper = ObjectMapper().apply {
+        registerModule(KotlinModule.Builder().build())
+    }
 }
