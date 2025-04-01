@@ -28,8 +28,6 @@ dependencies {
 	// Kotlin Coroutines
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.10.1")
-	// Kotlin Reactor
-//	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.2.3")
 
 	// Tests
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {

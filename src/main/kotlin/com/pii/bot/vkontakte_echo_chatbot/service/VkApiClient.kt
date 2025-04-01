@@ -1,6 +1,6 @@
 package com.pii.bot.vkontakte_echo_chatbot.service
 
-import com.pii.bot.vkontakte_echo_chatbot.config.VkApiMethod
+import com.pii.bot.vkontakte_echo_chatbot.model.vk.VkApiMethod
 import com.pii.bot.vkontakte_echo_chatbot.exception.VkApiException
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.VkApiResponse
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.Message
