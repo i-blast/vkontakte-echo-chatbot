@@ -1,30 +1,33 @@
 package com.pii.bot.vkontakte_echo_chatbot.controller
 
 import com.ninjasquad.springmockk.MockkBean
+import com.pii.bot.vkontakte_echo_chatbot.handler.MessageStatsHandler
+import com.pii.bot.vkontakte_echo_chatbot.router.MessageStatsRouter
 import com.pii.bot.vkontakte_echo_chatbot.service.MessageStatsService
 import io.mockk.coEvery
-import kotlinx.coroutines.test.runTest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import kotlin.test.Test
 
-@WebFluxTest(MessageStatsController::class)
-class MessageStatsControllerTest {
 
-    @Autowired
-    private lateinit var webTestClient: WebTestClient
+@WebFluxTest
+@Import(MessageStatsRouter::class, MessageStatsHandler::class)
+class MessageStatsHandlerTest(
+    @Autowired private val webTestClient: WebTestClient,
+) {
 
     @MockkBean
     private lateinit var messageStatsService: MessageStatsService
 
     @Test
-    fun `getWordStats should return word count`() = runTest {
+    fun `getWordStats should return message count`() {
         coEvery { messageStatsService.getMessageStats("превед") } returns 5L
 
         webTestClient.get()
-            .uri { it.path("/stats/message").queryParam("message", "превед").build() }
+            .uri("/api/stats/message?message=превед")
             .exchange()
             .expectStatus().isOk
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
@@ -33,14 +36,14 @@ class MessageStatsControllerTest {
     }
 
     @Test
-    fun `getTopMessages should return top messages`() = runTest {
+    fun `getTopMessages should return top messages`() {
         coEvery { messageStatsService.getTopMessages(any()) } returns mapOf(
             "превед" to 10L,
             "пока" to 5L
         )
 
         webTestClient.get()
-            .uri { it.path("/stats/top").queryParam("limit", "2").build() }
+            .uri { it.path("/api/stats/top").queryParam("limit", "2").build() }
             .exchange()
             .expectStatus().isOk
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
@@ -50,10 +53,10 @@ class MessageStatsControllerTest {
     }
 
     @Test
-    fun `getTopMessages should use default limit`() = runTest {
+    fun `getTopMessages should use default limit`() {
         coEvery { messageStatsService.getTopMessages(10) } returns emptyMap()
         webTestClient.get()
-            .uri("/stats/top")
+            .uri("/api/stats/top")
             .exchange()
             .expectStatus().isOk
     }
