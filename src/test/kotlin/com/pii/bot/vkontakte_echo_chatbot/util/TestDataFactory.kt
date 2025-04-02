@@ -9,6 +9,10 @@ import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.MessageNewEventObject
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.MessageReply
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.MessageReplyObject
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.VkEventType
+import com.pii.bot.vkontakte_echo_chatbot.repo.message.VkChatMessage
+import com.pii.bot.vkontakte_echo_chatbot.repo.user.VkUser
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 object TestDataFactory {
 
@@ -71,4 +75,20 @@ object TestDataFactory {
     val objectMapper: ObjectMapper = ObjectMapper().apply {
         registerModule(KotlinModule.Builder().build())
     }
+
+    fun createTestUser(
+        vkId: Int = 12345
+    ) = VkUser(
+        vkId = vkId,
+        firstName = "TestUser"
+    )
+
+    fun createTestVkMessage(
+        text: String = "test"
+    ) =
+        VkChatMessage(
+            text = text,
+            vkTimestamp = Instant.now().truncatedTo(ChronoUnit.MILLIS),
+            peerId = 12345L
+        )
 }

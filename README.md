@@ -8,7 +8,7 @@
 - **Kotlin (JDK 21), Spring Boot 3.4.x**
 - **Асинхронный (non-blocking I/O) стек: Spring WebFlux (Project Reactor) + Kotlin Coroutines**
 - **PostgreSQL R2DBC, Flyway**
-- **Spring Test, Testcontainers, MockK, Springmockk, MockWebServer, JUnit 5, AssertJ**
+- **Spring Test, Testcontainers, MockK, Springmockk, MockWebServer, Kotest, JUnit 5, AssertJ**
 - **ngrok** – HTTPS-туннель 
 
 ## Запуск

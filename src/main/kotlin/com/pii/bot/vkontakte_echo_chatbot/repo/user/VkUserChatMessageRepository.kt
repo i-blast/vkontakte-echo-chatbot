@@ -9,9 +9,9 @@ interface VkUserChatMessageRepository : CoroutineCrudRepository<VkUserChatMessag
 
     @Query(
         """
-        SELECT COUNT(*) FROM vk_chat_messages m
-        JOIN vk_user_chat_messages um ON m.id = um.message_id
-        JOIN vk_users u ON um.user_id = u.id
+        SELECT COUNT(*) FROM vk_chat.vk_chat_messages m
+        JOIN vk_chat.vk_user_chat_messages um ON m.id = um.message_id
+        JOIN vk_chat.vk_users u ON um.user_id = u.id
         WHERE u.vk_id = :vkUserId
         AND m.text ~* ('(^|[^а-яА-Яa-zA-Z0-9_])' || :word || '([^а-яА-Яa-zA-Z0-9_]|$)')
     """

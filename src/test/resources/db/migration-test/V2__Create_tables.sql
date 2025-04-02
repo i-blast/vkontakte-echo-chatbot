@@ -1,5 +1,3 @@
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA vk_chat TO message;
-
 CREATE TABLE IF NOT EXISTS vk_chat.vk_users
 (
     id         BIGSERIAL PRIMARY KEY,

@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: vkontakte-echo-chatbot-test
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    locations: classpath:db/migration-test/
+    schemas: vk_chat
+    default-schema: vk_chat
+    user: ${POSTGRES_USERNAME:testuser}
+    password: ${POSTGRES_PASSWORD:testpassword}
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/testdb
+
+  r2dbc:
+    url: r2dbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/testdb?schema=vk_chat
+    username: ${POSTGRES_USERNAME:testuser}
+    password: ${POSTGRES_PASSWORD:testpassword}
+    pool:
+      initial-size: 2
+      max-size: 10
+
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+logging:
+  level:
+    org.springframework: DEBUG
+    org.springframework.data.r2dbc: DEBUG
+    org.flywaydb: DEBUG

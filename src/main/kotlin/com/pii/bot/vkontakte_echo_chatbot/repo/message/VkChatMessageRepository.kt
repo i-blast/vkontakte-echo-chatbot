@@ -8,10 +8,12 @@ import java.time.Instant
 
 interface VkChatMessageRepository : CoroutineCrudRepository<VkChatMessage, Long> {
 
-    @Query("""
-        SELECT COUNT(*) FROM vk_chat_messages 
+    @Query(
+        """
+        SELECT COUNT(*) FROM vk_chat.vk_chat_messages 
         WHERE text ~* ('(^|[^а-яА-Яa-zA-Z0-9_])' || :word || '([^а-яА-Яa-zA-Z0-9_]|$)')
-    """)
+    """
+    )
     suspend fun countByExactWord(word: String): Long
 }
 

@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: vkontakte-echo-chatbot-test
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    locations: classpath:db/migration
+    schemas: vk_chat
+    default-schema: vk_chat
+    user: testuser
+    password: testpassword
+    url: jdbc:postgresql://localhost:5432/testdb
+
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/testdb?schema=vk_chat
+    username: testuser
+    password: testpassword
+    pool:
+      initial-size: 2
+      max-size: 10
+
+logging:
+  level:
+    org.springframework: DEBUG
+    org.flywaydb: DEBUG
+    org.springframework.r2dbc: DEBUG
+#    reactor.netty.http.server: DEBUG

@@ -31,6 +31,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.10.1")
+	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 
 	// DB
 	runtimeOnly("org.postgresql:r2dbc-postgresql:1.0.7.RELEASE")
@@ -52,6 +53,11 @@ dependencies {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 		exclude(group = "org.mockito")
 	}
+
+	testImplementation("io.kotest:kotest-assertions-core:5.9.1")
+	testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
+	testImplementation("io.kotest:kotest-extensions-spring:4.4.3")
+
 	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
 	testImplementation("io.projectreactor:reactor-test")
 
@@ -60,7 +66,6 @@ dependencies {
 	testImplementation("com.squareup.okhttp3:mockwebserver:5.0.0-alpha.14")
 
 	testImplementation(kotlin("test"))
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 kotlin {
