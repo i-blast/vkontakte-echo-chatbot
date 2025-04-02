@@ -1,28 +1,17 @@
 package com.pii.bot.vkontakte_echo_chatbot.service
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.pii.bot.vkontakte_echo_chatbot.repo.message.VkChatMessageRepository
+import com.pii.bot.vkontakte_echo_chatbot.repo.user.VkUserChatMessageRepository
 import org.springframework.stereotype.Service
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.atomic.AtomicLong
 
 @Service
-class MessageStatsService() {
+class MessageStatsService(
+    private val vkChatMessageRepository: VkChatMessageRepository,
+    private val vkUserChatMessageRepository: VkUserChatMessageRepository,
+) {
 
-    private val messagesStats = ConcurrentHashMap<String, AtomicLong>()
+    suspend fun getWordStats(word: String): Long = vkChatMessageRepository.countByExactWord(word)
 
-    suspend fun addMessage(text: String) {
-        withContext(Dispatchers.IO) {
-            messagesStats.computeIfAbsent(text) { AtomicLong(0L) }.incrementAndGet()
-        }
-    }
-
-    suspend fun getTopMessages(limit: Int): Map<String, Long> {
-        return messagesStats.entries
-            .sortedByDescending { it.value.get() }
-            .take(limit)
-            .associate { it.key to it.value.get() }
-    }
-
-    suspend fun getMessageStats(word: String): Long = messagesStats.getOrDefault(word, AtomicLong(0L)).get()
+    suspend fun getWordStatsForUser(word: String, vkUserId: Long): Long =
+        vkUserChatMessageRepository.countByUserVkIdAndExactWord(vkUserId, word)
 }

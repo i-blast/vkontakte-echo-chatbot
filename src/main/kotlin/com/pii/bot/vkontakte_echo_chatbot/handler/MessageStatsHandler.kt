@@ -13,20 +13,18 @@ class MessageStatsHandler(
 ) {
 
     suspend fun getMessageStats(request: ServerRequest): ServerResponse {
-        val message = request.queryParam("message").orElse("")
-        val count = messageStatsService.getMessageStats(message)
+        val word = request.queryParam("word").orElse("")
+        if (word.isBlank()) {
+            return ServerResponse.badRequest()
+                .bodyValueAndAwait(mapOf("error" to "Parameter 'word' is required."))
+        }
+
+        val result = request.queryParam("vkUserId").orElse(null)?.toIntOrNull()?.let { vkUserId ->
+            messageStatsService.getWordStatsForUser(word, vkUserId.toLong())
+        } ?: messageStatsService.getWordStats(word)
 
         return ServerResponse.ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValueAndAwait(count)
-    }
-
-    suspend fun getTopMessages(request: ServerRequest): ServerResponse {
-        val limit = request.queryParam("limit").map { it.toInt() }.orElse(10)
-        val topMessages = messageStatsService.getTopMessages(limit)
-
-        return ServerResponse.ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValueAndAwait(topMessages)
+            .bodyValueAndAwait(result)
     }
 }

@@ -17,19 +17,19 @@ class GlobalExceptionHandler : WebExceptionHandler {
     private val logger: Logger = LoggerFactory.getLogger(GlobalExceptionHandler::class.java)
 
 
-    override fun handle(exchange: ServerWebExchange, ex: Throwable): Mono<Void> {
+    override fun handle(exchange: ServerWebExchange, exc: Throwable): Mono<Void> {
 
-        logger.error(">>>>> Exception caught: ${ex.message}", ex)
+        logger.error(">>>>> Exception caught: ${exc.message}", exc)
 
         val response = exchange.response
-        val status = when (ex) {
+        val status = when (exc) {
             is VkApiException -> HttpStatus.BAD_REQUEST
             else -> HttpStatus.INTERNAL_SERVER_ERROR
         }
         response.statusCode = status
         response.headers.contentType = MediaType.TEXT_PLAIN
 
-        val errorMessage = ex.message ?: "Unexpected error"
+        val errorMessage = exc.message ?: "Unexpected error"
 
         return response.writeWith(
             Mono.just(response.bufferFactory().wrap(errorMessage.toByteArray()))

@@ -2,6 +2,46 @@ spring:
   application:
     name: vkontakte-echo-chatbot
 
+#  datasource:
+#    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:message_db}
+#    username: ${POSTGRES_USER:message}
+#    password: ${POSTGRES_PASSWORD:message}
+#    driver-class-name: org.postgresql.Driver
+
+  flyway:
+    enabled: true
+#    baseline-on-migrate: true
+#    validate-on-migrate: true
+    locations: classpath:db/migration
+    schemas: vk_chat
+    default-schema: vk_chat
+    user: ${POSTGRES_USER:message}
+    password: ${POSTGRES_PASSWORD:message}
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:message_db}
+
+  r2dbc:
+    url: r2dbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:message_db}?schema=vk_chat
+    username: ${POSTGRES_USER:message}
+    password: ${POSTGRES_PASSWORD:message}
+    pool:
+      initial-size: 5
+      max-size: 32
+
+#  elasticsearch:
+#    uris: ${ELASTICSEARCH_HOST:http://localhost:9200}
+#    connection-timeout: 5s
+#    socket-timeout: 10s
+#    username: ${ELASTICSEARCH_USER:elastic}
+#    password: ${ELASTICSEARCH_PASSWORD:}
+#
+#  data:
+#    elasticsearch:
+#      reactive:
+#        client:
+#          endpoints: ${ELASTICSEARCH_HOST:localhost}:9200
+#          use-ssl: false
+#          socket-timeout: 10s
+
 server:
   port: 8080
 
@@ -9,10 +49,13 @@ vk:
   access-token: ${VK_ACCESS_TOKEN}
   group-id: ${VK_GROUP_ID}
   confirmation-code: ${VK_CONFIRMATION_CODE}
-  api-version: 5.199
+  api-version: ${VK_API_VERSION:5.199}
 
 logging:
   level:
+    org.elasticsearch.client: DEBUG
+    org.flywaydb: DEBUG
+    org.springframework.data.r2dbc: DEBUG
     org.springframework.web: DEBUG
-    reactor.netty.http.server: DEBUG
     org.springframework.web.reactive: DEBUG
+    reactor.netty.http.server: DEBUG

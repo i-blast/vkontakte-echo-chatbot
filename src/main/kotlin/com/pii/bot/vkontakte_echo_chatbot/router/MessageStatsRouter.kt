@@ -15,7 +15,7 @@ class MessageStatsRouter(
         "/api".nest {
             "/stats".nest {
                 GET("/message", messageStatsHandler::getMessageStats)
-                GET("/top", messageStatsHandler::getTopMessages)
+//                GET("/top", messageStatsHandler::getTopMessages)
             }
         }
     }

@@ -1,8 +1,7 @@
-package com.pii.bot.vkontakte_echo_chatbot.controller
+package com.pii.bot.vkontakte_echo_chatbot.handler
 
 import com.ninjasquad.springmockk.MockkBean
 import com.pii.bot.vkontakte_echo_chatbot.exception.VkApiException
-import com.pii.bot.vkontakte_echo_chatbot.handler.VkCallbackHandler
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.Confirmation
 import com.pii.bot.vkontakte_echo_chatbot.model.vk.event.VkEvent
 import com.pii.bot.vkontakte_echo_chatbot.router.VkCallbackRouter

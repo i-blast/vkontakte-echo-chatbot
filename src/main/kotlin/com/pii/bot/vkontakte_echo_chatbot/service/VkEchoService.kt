@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service
 class VkEchoService(
     private val vkApiClient: VkApiClient,
     private val messageStatsService: MessageStatsService,
+    private val vkMessageService: VkMessageService,
+    private val vkUserService: VkUserService,
 ) {
 
     private val logger: Logger = LoggerFactory.getLogger(VkEchoService::class.java)
@@ -34,18 +36,25 @@ class VkEchoService(
         }
     }
 
-    suspend fun handleNewMessage(message: Message): String = coroutineScope {
+    suspend fun handleNewMessage(vkApiMessage: Message): String = coroutineScope {
 
         val sendMessageDeferred = async {
-            vkApiClient.sendMessage(message).also { logger.debug(">>>>> message sent: ${message.text}") }
+            vkApiClient.sendMessage(vkApiMessage).also { logger.debug(">>>>> message sent: ${vkApiMessage.text}") }
         }
-        val addStatsDeferred = async {
-            messageStatsService.addMessage(message.text).also { logger.debug(">>>>>  stats updated: ${message.text}") }
+        val saveUserMessageDeferred = async {
+            val savedUser = vkUserService.findOrCreateUser(vkApiMessage.fromId)
+            val savedMessage = vkMessageService.saveMessage(vkApiMessage)
+            vkUserService.saveUserMessage(savedUser, savedMessage)
+        }
+        val reIndexStatsDeferred = async {
+//            TODO("после реализации elasticsearch хранилища")
         }
 
         try {
             sendMessageDeferred.await()
-            addStatsDeferred.await()
+            saveUserMessageDeferred.await()
+//            reIndexStatsDeferred.await()
+
             return@coroutineScope "ok"
         } catch (exc: Exception) {
             logger.error(">>>>> failed to process message sendMessage & addMessage concurrently. Reason: ${exc.message}")
