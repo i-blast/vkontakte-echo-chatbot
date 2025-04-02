@@ -5,8 +5,10 @@
 ## Стек
 
 - **VK API (Callback API)**
-- **Kotlin (JDK 21), Kotlin Coroutines, Spring Boot 3.4.x, Spring WebFlux**
-- **Spring Test, MockK, Springmockk, MockWebServer, JUnit 5, AssertJ**
+- **Kotlin (JDK 21), Spring Boot 3.4.x**
+- **Асинхронный (non-blocking I/O) стек: Spring WebFlux (Project Reactor) + Kotlin Coroutines**
+- **PostgreSQL R2DBC, Flyway**
+- **Spring Test, Testcontainers, MockK, Springmockk, MockWebServer, JUnit 5, AssertJ**
 - **ngrok** – HTTPS-туннель 
 
 ## Запуск
@@ -31,10 +33,11 @@
 
 ## Дополнительно
 
-- Сервис подсчёта статистики сообщений (in-memory)
-- Асинхронный (non-blocking I/O) стек: Spring WebFlux (Project Reactor) + Kotlin Coroutines
+- Сервис хранения сообщений (PostgreSQL)
+- Поиск по точному совпадению GET /api/stats/message?word=&vkUserId=
+- 
 
 ## TODO
 
-- Реальное хранилище для реализации статистики сообщений. PostgreSQL R2DBC, Elasticsearch,.. (отдельная ветка non-blocking-storage)
+- Морфологический поиск (Elasticsearch)
 - 
